@@ -89,7 +89,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 output.setText(show);
                 break;
             case R.id.buttonEqual:
-                doCalculation();
+                Object result = doCalculation(temp);
+                output.setText(String.valueOf(result));
                 break;
             case R.id.buttonClear:
                 temp ="";
@@ -98,14 +99,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    private void doCalculation() {
+    public Object doCalculation( String input ) {
         org.mozilla.javascript.Context rhino = org.mozilla.javascript.Context.enter();
         rhino.setOptimizationLevel(-1);
-        String cal = output.getText().toString();
+        Object result = null;
         try {
             ScriptableObject scope = rhino.initStandardObjects();
-            Object result = rhino.evaluateString(scope,cal,"JavaScript",1,null);
-            output.setText(String.valueOf(result));
+            result = rhino.evaluateString(scope,input,"JavaScript",1,null);
         }catch (Exception e){
             Log.e(TAG, "doCalculation: Error: "+e.getMessage());
             output.setText("");
@@ -113,5 +113,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }finally {
             org.mozilla.javascript.Context.exit();
         }
+        return result;
     }
 }

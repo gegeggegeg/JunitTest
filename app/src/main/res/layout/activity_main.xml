@@ -140,6 +140,7 @@
             android:id="@+id/buttonDivide"
             android:layout_width="60dp"
             android:layout_height="wrap_content"
+            android:onClick="onClick"
             android:text="/"
             android:textSize="24sp" />
 
