@@ -1,8 +1,12 @@
 package com.test.peterphchen.junittest;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -99,7 +103,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    public Object doCalculation( String input ) {
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.options,menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()){
+            case R.id.list:
+                Intent intent = new Intent(MainActivity.this,RecycleActivity.class);
+                startActivity(intent);
+                return true;
+            case R.id.about:
+                Toast.makeText(this, "THis app is for test only", Toast.LENGTH_SHORT).show();
+                return  true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    public Object doCalculation(String input ) {
         org.mozilla.javascript.Context rhino = org.mozilla.javascript.Context.enter();
         rhino.setOptimizationLevel(-1);
         Object result = null;
@@ -115,4 +139,5 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         return result;
     }
+
 }
