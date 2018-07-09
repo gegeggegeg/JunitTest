@@ -1,9 +1,13 @@
 package com.test.peterphchen.junittest;
 
+import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -13,6 +17,7 @@ import android.widget.Toast;
 
 import org.mozilla.javascript.ScriptableObject;
 
+import java.util.ArrayList;
 
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
@@ -20,12 +25,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private EditText output;
     private static String temp = "";
     private static final String TAG = "MainActivity";
+    private DatabaseHelper dbhelper;
+    private SQLiteDatabase db;
+    private static Integer number = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         output = findViewById(R.id.outputText);
+        dbhelper = new DatabaseHelper(getApplicationContext());
+        db = dbhelper.getWritableDatabase();
     }
 
     @Override
@@ -94,6 +104,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.buttonEqual:
                 Object result = doCalculation(temp);
+                String equation = temp + " = "+result;
+                ContentValues values = new ContentValues();
+                values.put("equation",equation);
+                values.put("number",number);
+                number++;
+                db.insert("result",null,values);
                 output.setText(String.valueOf(result));
                 break;
             case R.id.buttonClear:
@@ -119,6 +135,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.about:
                 Toast.makeText(this, "THis app is for test only", Toast.LENGTH_SHORT).show();
                 return  true;
+            case R.id.delete:
+                db.execSQL("DROP TABLE IF EXISTS " + DatabaseHelper.TABLE);
+                dbhelper.onCreate(db);
+                Toast.makeText(this, "Table deleted", Toast.LENGTH_SHORT).show();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -138,6 +158,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             org.mozilla.javascript.Context.exit();
         }
         return result;
+    }
+
+    @Override
+    protected void onDestroy() {
+        db.close();
+        super.onDestroy();
     }
 
 }

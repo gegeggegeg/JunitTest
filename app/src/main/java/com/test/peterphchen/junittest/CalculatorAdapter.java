@@ -1,19 +1,26 @@
 package com.test.peterphchen.junittest;
 
 import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
+
 public class CalculatorAdapter extends RecyclerView.Adapter<ResultHolder> {
 
-    private static final String[] items={"lorem", "ipsum", "dolor",
-            "sit", "amet",
-            "consectetuer", "adipiscing", "elit", "morbi", "vel",
-            "ligula", "vitae", "arcu", "aliquet", "mollis",
-            "etiam", "vel", "erat", "placerat", "ante",
-            "porttitor", "sodales", "pellentesque", "augue", "purus"};
+    private static final String TAG = "CalculatorAdapter";
+    private ArrayList<String> equations;
+
+    public CalculatorAdapter(ArrayList<String> equations) {
+        super();
+        this.equations = equations;
+    }
 
     @NonNull
     @Override
@@ -24,12 +31,13 @@ public class CalculatorAdapter extends RecyclerView.Adapter<ResultHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull ResultHolder holder, int position) {
-        holder.setItem(items[position]);
+        holder.setItem(equations.get(position));
         holder.setResultView();
+        holder.setIndexView(String.valueOf(position));
     }
 
     @Override
     public int getItemCount() {
-        return items.length;
+        return equations.size();
     }
 }

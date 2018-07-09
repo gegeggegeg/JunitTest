@@ -1,14 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="50dp">
+    android:layout_height="wrap_content"
+    android:columnCount="2"
+    android:rowCount="1">
+
+    <TextView
+        android:id="@+id/index"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_columnWeight="1"
+        android:textSize="24sp" />
 
     <TextView
         android:id="@+id/resultView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_columnWeight="4"
         android:textSize="24sp" />
 
-</android.support.constraint.ConstraintLayout>
+</GridLayout>

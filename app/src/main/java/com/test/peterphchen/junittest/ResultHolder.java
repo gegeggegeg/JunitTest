@@ -7,11 +7,21 @@ import android.widget.TextView;
 public class ResultHolder extends RecyclerView.ViewHolder {
 
     private TextView resultView;
+    private TextView indexView;
     private String item;
 
     public ResultHolder(View itemView) {
         super(itemView);
         resultView = itemView.findViewById(R.id.resultView);
+        indexView = itemView.findViewById(R.id.index);
+    }
+
+    public TextView getIndexView() {
+        return indexView;
+    }
+
+    public void setIndexView(String index) {
+        indexView.setText(index);
     }
 
     public TextView getResultView() {
