@@ -14,10 +14,10 @@ public class RecycleActivity extends AppCompatActivity{
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        RecyclerView recyclerView = new RecyclerView(this);
+        setContentView(R.layout.acivity_recycler);
+        RecyclerView recyclerView = findViewById(R.id.recycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(new CalculatorAdapter(createArraylist()));
-        setContentView(recyclerView);
     }
 
     private ArrayList<String> createArraylist() {
