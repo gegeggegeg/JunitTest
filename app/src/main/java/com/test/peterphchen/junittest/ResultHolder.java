@@ -44,6 +44,6 @@ public class ResultHolder extends RecyclerView.ViewHolder implements  View.OnCli
 
     @Override
     public void onClick(View view) {
-        Toast.makeText(view.getContext(), "Clicked on position: "+getAdapterPosition(), Toast.LENGTH_SHORT).show();
+        //
     }
 }

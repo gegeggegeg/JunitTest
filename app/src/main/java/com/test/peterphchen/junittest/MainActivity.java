@@ -6,6 +6,10 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -28,6 +32,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private DatabaseHelper dbhelper;
     private SQLiteDatabase db;
     private static Integer number = 1;
+    private DrawerLayout mDrawerLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +41,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         output = findViewById(R.id.outputText);
         dbhelper = new DatabaseHelper(getApplicationContext());
         db = dbhelper.getWritableDatabase();
+        mDrawerLayout = findViewById(R.id.drawer_layout);
+        NavigationView navigationView = findViewById(R.id.nav_view);
+
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()){
+                    case R.id.cake:
+                        Toast.makeText(MainActivity.this, "Happy birthday", Toast.LENGTH_SHORT).show();
+                        break;
+                    case R.id.music:
+                        Toast.makeText(MainActivity.this, "Sounds good", Toast.LENGTH_SHORT).show();
+                        break;
+                    case R.id.eggdroid:
+                        Toast.makeText(MainActivity.this, "It is so cuuuute!", Toast.LENGTH_SHORT).show();
+                        break;
+                }
+                mDrawerLayout.closeDrawer(GravityCompat.START);
+                return true;
+            }
+        });
     }
 
     @Override

@@ -11,17 +11,18 @@ import android.support.v7.widget.RecyclerView;
 import java.util.ArrayList;
 
 public class RecycleActivity extends AppCompatActivity{
+    private DatabaseHelper dbhelper;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        dbhelper = new DatabaseHelper(getApplicationContext());
         setContentView(R.layout.acivity_recycler);
         RecyclerView recyclerView = findViewById(R.id.recycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(new CalculatorAdapter(createArraylist()));
+        recyclerView.setAdapter(new CalculatorAdapter(createArraylist(),getApplicationContext()));
     }
 
     private ArrayList<String> createArraylist() {
-        DatabaseHelper dbhelper = new DatabaseHelper(getApplicationContext());
         SQLiteDatabase db = dbhelper.getReadableDatabase();
         String[] projection = {
                 "ROWID AS _id",
@@ -37,5 +38,10 @@ public class RecycleActivity extends AppCompatActivity{
         result.close();
         db.close();
         return  equations;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 }
