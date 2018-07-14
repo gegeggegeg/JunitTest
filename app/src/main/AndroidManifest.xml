@@ -30,6 +30,12 @@
                 android:resource="@xml/appwidget_provider_info"/>
         </receiver>
 
+        <provider
+            android:authorities="com.test.peterphchen.junittest.EquationsProvider"
+            android:name=".EquationsProvider"
+            android:exported="false"
+            />
+
     </application>
 
 </manifest>
