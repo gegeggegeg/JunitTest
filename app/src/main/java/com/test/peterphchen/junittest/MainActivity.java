@@ -3,6 +3,7 @@ package com.test.peterphchen.junittest;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -16,8 +17,19 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.Switch;
 import android.widget.Toast;
+
+import com.firebase.jobdispatcher.Constraint;
+import com.firebase.jobdispatcher.Driver;
+import com.firebase.jobdispatcher.FirebaseJobDispatcher;
+import com.firebase.jobdispatcher.GooglePlayDriver;
+import com.firebase.jobdispatcher.Job;
+import com.firebase.jobdispatcher.Lifetime;
+import com.firebase.jobdispatcher.RetryStrategy;
+import com.firebase.jobdispatcher.Trigger;
 
 import org.mozilla.javascript.ScriptableObject;
 
@@ -33,6 +45,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private SQLiteDatabase db;
     private static Integer number = 1;
     private DrawerLayout mDrawerLayout;
+    private FirebaseJobDispatcher dispatcher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +73,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
                 mDrawerLayout.closeDrawer(GravityCompat.START);
                 return true;
+            }
+        });
+        final Job testJob = JobScheduling();
+        Switch jobSwitch = findViewById(R.id.jobSwitch);
+        final SharedPreferences setting = getPreferences(0);
+        jobSwitch.setChecked(setting.getBoolean("switch",false));
+        jobSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if(b){
+                    dispatcher.mustSchedule(testJob);
+                    Toast.makeText(MainActivity.this, "Scheduled job enabled", Toast.LENGTH_SHORT).show();
+                }else{
+                    dispatcher.cancel("test-job");
+                    Toast.makeText(MainActivity.this, "Scheduled job disabled", Toast.LENGTH_SHORT).show();
+                }
+                SharedPreferences.Editor editor =setting.edit();
+                editor.putBoolean("switch",b);
+                editor.commit();
             }
         });
     }
@@ -184,6 +216,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             org.mozilla.javascript.Context.exit();
         }
         return result;
+    }
+
+    private Job JobScheduling(){
+        Driver driver = new GooglePlayDriver(this);
+        dispatcher = new FirebaseJobDispatcher(driver);
+        Job myJob = dispatcher.newJobBuilder()
+                .setService(MyjobService.class)
+                .setTag("test-job")
+                .setRecurring(false)
+                .setLifetime(Lifetime.UNTIL_NEXT_BOOT)
+                .setTrigger(Trigger.executionWindow(0,15))
+                .setReplaceCurrent(true)
+                .setRetryStrategy(RetryStrategy.DEFAULT_EXPONENTIAL)
+                .setConstraints(Constraint.DEVICE_CHARGING)
+                .build();
+        return myJob;
     }
 
     @Override
