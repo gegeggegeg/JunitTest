@@ -20,13 +20,23 @@ public class CalculatorAdapter extends RecyclerView.Adapter<ResultHolder> {
 
     private static final String TAG = "CalculatorAdapter";
     private ArrayList<String> equations;
+    private ArrayList<String> date;
     private SQLiteDatabase database;
     private Context context;
 
-    public CalculatorAdapter(ArrayList<String> equations,Context context) {
+    public CalculatorAdapter(Context context) {
         super();
-        this.equations = equations;
+        database = new DatabaseHelper(context).getReadableDatabase();
+        Cursor cursor = database.rawQuery("SELECT * FROM "+EquationContract.TABLE_NAME, null);
+        equations = new ArrayList<>();
+        date = new ArrayList<>();
+        while(cursor.moveToNext()){
+            this.equations.add(cursor.getString(2));
+            this.date.add(cursor.getString(3));
+        }
         this.context = context;
+        database.close();
+        cursor.close();
     }
 
     @NonNull
@@ -41,6 +51,7 @@ public class CalculatorAdapter extends RecyclerView.Adapter<ResultHolder> {
         holder.setItem(equations.get(position));
         holder.setResultView();
         holder.setIndexView(String.valueOf(position));
+        holder.setDateView(date.get(position));
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -49,7 +60,7 @@ public class CalculatorAdapter extends RecyclerView.Adapter<ResultHolder> {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         database = new DatabaseHelper(context).getWritableDatabase();
-                        database.delete(DatabaseHelper.TABLE,DatabaseHelper.EQUATION+"=?"
+                        database.delete(EquationContract.TABLE_NAME,EquationContract.EQUATION+"=?"
                                 ,new String[]{equations.get(position)});
                         database.close();
                         equations.remove(position);

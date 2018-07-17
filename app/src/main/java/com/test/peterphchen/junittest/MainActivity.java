@@ -7,6 +7,8 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.icu.text.SimpleDateFormat;
+import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -34,6 +36,8 @@ import com.firebase.jobdispatcher.Trigger;
 import org.mozilla.javascript.ScriptableObject;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
@@ -161,12 +165,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 output.setText(show);
                 break;
             case R.id.buttonEqual:
+                SimpleDateFormat s = new SimpleDateFormat("ddMMyyyyhhmmss");
+                String time = s.format(new Date());
                 Object result = doCalculation(temp);
                 String equation = temp + " = "+result;
                 ContentValues values = new ContentValues();
-                values.put("equation",equation);
-                values.put("number",number);
+                values.put(EquationContract.EQUATION,equation);
+                values.put(EquationContract.NUMMBER,number);
+                values.put(EquationContract.DATE,time);
                 number++;
+                Toast.makeText(this, equation, Toast.LENGTH_SHORT).show();
                 db.insert("result",null,values);
                 output.setText(String.valueOf(result));
                 break;

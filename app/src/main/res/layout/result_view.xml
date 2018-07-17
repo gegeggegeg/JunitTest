@@ -10,27 +10,42 @@
     android:layout_margin="4dp"
     cardview:cardCornerRadius="4dp">
 
-    <GridLayout
+    <LinearLayout
+        android:orientation="vertical"
+        android:id="@+id/linearlayout1"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/gridview1"
-        android:columnCount="2"
-        android:rowCount="1">
+        android:layout_height="wrap_content">
+
+        <GridLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/gridview1"
+            android:columnCount="3"
+            android:rowCount="1">
+
+            <TextView
+                android:id="@+id/index"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                android:textSize="24sp" />
+
+            <TextView
+                android:id="@+id/resultView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_columnWeight="4"
+                android:textSize="24sp" />
+        </GridLayout>
+
 
         <TextView
-            android:id="@+id/index"
+            android:id="@+id/dateView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_columnWeight="1"
-            android:textSize="24sp" />
+            android:textSize="24sp"/>
 
-        <TextView
-            android:id="@+id/resultView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_columnWeight="4"
-            android:textSize="24sp" />
-    </GridLayout>
+    </LinearLayout>
 
     <View
         android:layout_width="match_parent"

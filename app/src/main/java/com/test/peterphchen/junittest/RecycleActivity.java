@@ -19,23 +19,23 @@ public class RecycleActivity extends AppCompatActivity{
         setContentView(R.layout.acivity_recycler);
         RecyclerView recyclerView = findViewById(R.id.recycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(new CalculatorAdapter(createArraylist(),getApplicationContext()));
+        recyclerView.setAdapter(new CalculatorAdapter(getApplicationContext()));
     }
 
     private ArrayList<String> createArraylist() {
         SQLiteDatabase db = dbhelper.getReadableDatabase();
         String[] projection = {
-                "ROWID AS _id",
-                DatabaseHelper.NUMBER,
-                DatabaseHelper.EQUATION
+                "_id",
+                EquationContract.NUMMBER,
+                EquationContract.EQUATION,
+                EquationContract.DATE
         };
-        Cursor result = db.query(DatabaseHelper.TABLE,projection,
-                null,null,null,null,DatabaseHelper.NUMBER);
+        Cursor cursor = db.rawQuery("SELECT * FROM "+ EquationContract.TABLE_NAME,projection);
         ArrayList<String> equations = new ArrayList<>();
-        while (result.moveToNext()){
-            equations.add(result.getString(2));
+        while (cursor.moveToNext()){
+            equations.add(cursor.getString(2));
         }
-        result.close();
+        cursor.close();
         db.close();
         return  equations;
     }

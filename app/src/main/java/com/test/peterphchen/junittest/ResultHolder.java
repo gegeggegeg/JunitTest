@@ -9,12 +9,23 @@ public class ResultHolder extends RecyclerView.ViewHolder implements  View.OnCli
 
     private TextView resultView;
     private TextView indexView;
+    private TextView dateView;
     private String item;
+
+    public TextView getDateView() {
+        return dateView;
+    }
+
+    public void setDateView(String text) {
+        this.dateView.setText(text);
+    }
 
     public ResultHolder(View itemView) {
         super(itemView);
         resultView = itemView.findViewById(R.id.resultView);
         indexView = itemView.findViewById(R.id.index);
+        dateView = itemView.findViewById(R.id.dateView);
+
         itemView.setOnClickListener(this);
     }
 
