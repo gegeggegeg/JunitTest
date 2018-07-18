@@ -6,6 +6,7 @@ public class EquationContract {
     public static final String NUMMBER = "number";
     public static final String EQUATION = "equation";
     public static final String DATE = "date";
+    public static final String ID = "_id";
     public static final String EQUATIONS_TABLE_CTRATE
             ="CREATE TABLE " + TABLE_NAME
             +" (_id INTEGER PRIMARY KEY AUTOINCREMENT, number INTEGER, " +
