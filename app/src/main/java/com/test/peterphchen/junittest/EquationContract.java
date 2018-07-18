@@ -13,4 +13,7 @@ public class EquationContract {
             "equation TEXT, date TEXT);";
     public static final String EQUATIONS_TALBE_DELETE
             = "DROP TABLE IF EXIST"+ TABLE_NAME;
+    public static final String CONTENT_SCHEME = "content://";
+    public static final String CONTENT_AUTHORITY = "com.test.peterphchen.junittest";
+    public static final String CONTENT_URI = CONTENT_AUTHORITY+CONTENT_AUTHORITY+"/"+TABLE_NAME;
 }

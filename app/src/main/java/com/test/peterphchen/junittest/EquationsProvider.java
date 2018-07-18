@@ -7,28 +7,20 @@ import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
-import android.util.Log;
 
 public class EquationsProvider extends ContentProvider {
     private static final String TAG = "EquationsProvider";
-    private static final String number = DatabaseHelper.NUMBER;
-    private static final String equation = DatabaseHelper.EQUATION;
-    private static final String table = DatabaseHelper.TABLE;
-    private static final String authority = "com.test.peterphchen.junittest";
-    private static final String scheme = "content://";
-    private DatabaseHelper dbhelper;
-    private static final Uri content_uri = Uri.parse("content://com.test.peterphchen.junittest.EquationsProvider/result");
-    private static UriMatcher uriMatcher;
+    private DatabaseHelper dbhelper = new DatabaseHelper(getContext());;
+    private static final Uri content_uri = Uri.parse(EquationContract.CONTENT_URI);
+    private static UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
     @Override
     public boolean onCreate() {
-        dbhelper= new DatabaseHelper(getContext());
-        uriMatcher.addURI(authority,table,1001);
-        uriMatcher.addURI(authority,table+"/#",1002);
+        uriMatcher.addURI(EquationContract.CONTENT_AUTHORITY,EquationContract.TABLE_NAME,1001);
+        uriMatcher.addURI(EquationContract.CONTENT_AUTHORITY,EquationContract.TABLE_NAME+"/#",1002);
         return true;
     }
 
@@ -50,7 +42,7 @@ public class EquationsProvider extends ContentProvider {
                 throw  new IllegalArgumentException("Can't query unknow URI"+uri);
         }
         SQLiteDatabase database = dbhelper.getReadableDatabase();
-        Cursor cursor = database.query(table,projection,selection,selectionArgs,
+        Cursor cursor = database.query(EquationContract.TABLE_NAME,projection,selection,selectionArgs,
                 null,null,sort);
         cursor.setNotificationUri(getContext().getContentResolver(), uri);
         return cursor;
@@ -65,7 +57,7 @@ public class EquationsProvider extends ContentProvider {
     @Nullable
     @Override
     public Uri insert(@NonNull Uri uri, @Nullable ContentValues contentValues) {
-        long rowID = dbhelper.getWritableDatabase().insert(table,equation,contentValues);
+        long rowID = dbhelper.getWritableDatabase().insert(EquationContract.TABLE_NAME,EquationContract.EQUATION,contentValues);
 
         if(rowID >0)
             return  ContentUris.withAppendedId(content_uri,rowID);
@@ -75,18 +67,14 @@ public class EquationsProvider extends ContentProvider {
 
     @Override
     public int delete(@NonNull Uri uri, @Nullable String where, @Nullable String[] whereArgs) {
-        int count = dbhelper.getWritableDatabase().delete(table,where,whereArgs);
-        try {
-            getContext().getContentResolver().notifyChange(uri,null);
-        }catch (Exception e){
-            Log.e(TAG, "delete: "+e.getMessage());
-        }
+        int count = dbhelper.getWritableDatabase().delete(EquationContract.TABLE_NAME,where,whereArgs);
+        getContext().getContentResolver().notifyChange(uri,null);
         return count;
     }
 
     @Override
     public int update(@NonNull Uri uri, @Nullable ContentValues contentValues, @Nullable String where, @Nullable String[] whereArgs) {
-        int count = dbhelper.getWritableDatabase().update(table,contentValues,where,whereArgs);
+        int count = dbhelper.getWritableDatabase().update(EquationContract.TABLE_NAME,contentValues,where,whereArgs);
         getContext().getContentResolver().notifyChange(uri,null);
         return count;
     }

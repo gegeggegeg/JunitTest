@@ -202,7 +202,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Toast.makeText(this, "THis app is for test only", Toast.LENGTH_SHORT).show();
                 return  true;
             case R.id.delete:
-                db.execSQL("DROP TABLE IF EXISTS " + DatabaseHelper.TABLE);
+                db.execSQL("DROP TABLE IF EXISTS " + EquationContract.TABLE_NAME);
                 dbhelper.onCreate(db);
                 Toast.makeText(this, "Table deleted", Toast.LENGTH_SHORT).show();
         }

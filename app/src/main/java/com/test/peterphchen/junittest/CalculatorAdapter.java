@@ -5,14 +5,11 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -27,7 +24,9 @@ public class CalculatorAdapter extends RecyclerView.Adapter<ResultHolder> {
     public CalculatorAdapter(Context context) {
         super();
         database = new DatabaseHelper(context).getReadableDatabase();
-        Cursor cursor = database.rawQuery("SELECT * FROM "+EquationContract.TABLE_NAME, null);
+        String[] projection = {EquationContract.ID,EquationContract.NUMMBER,EquationContract.EQUATION,EquationContract.DATE};
+        Cursor cursor = database.query(EquationContract.TABLE_NAME,projection,null,null,null,
+                null,EquationContract.ID);
         equations = new ArrayList<>();
         date = new ArrayList<>();
         while(cursor.moveToNext()){

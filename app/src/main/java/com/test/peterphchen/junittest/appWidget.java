@@ -21,17 +21,17 @@ public class appWidget extends AppWidgetProvider {
         SQLiteDatabase db = new DatabaseHelper(context).getReadableDatabase();
         String[] projection = {
                 "ROWID AS _id",
-                DatabaseHelper.NUMBER,
-                DatabaseHelper.EQUATION
+                EquationContract.ID,
+                EquationContract.TABLE_NAME
         };
         Cursor cursor = db.query(
-                DatabaseHelper.TABLE,
+                EquationContract.TABLE_NAME,
                 projection,
                 null,
                 null,
                 null,
                 null,
-                DatabaseHelper.NUMBER
+                EquationContract.ID
         );
         equations = new ArrayList<String>();
         while(cursor.moveToNext()){
