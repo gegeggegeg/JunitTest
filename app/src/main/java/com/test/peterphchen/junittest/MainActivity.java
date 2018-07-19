@@ -175,7 +175,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 values.put(EquationContract.DATE,time);
                 number++;
                 Toast.makeText(this, equation, Toast.LENGTH_SHORT).show();
-                db.insert("result",null,values);
+                //db.insert("result",null,values);
+                getContentResolver().insert(EquationContract.CONTENT_URI,values);
                 output.setText(String.valueOf(result));
                 break;
             case R.id.buttonClear:

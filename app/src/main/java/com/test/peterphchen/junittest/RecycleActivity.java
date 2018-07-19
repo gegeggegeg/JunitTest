@@ -2,6 +2,7 @@ package com.test.peterphchen.junittest;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -21,25 +22,6 @@ public class RecycleActivity extends AppCompatActivity{
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(new CalculatorAdapter(getApplicationContext()));
     }
-
-    private ArrayList<String> createArraylist() {
-        SQLiteDatabase db = dbhelper.getReadableDatabase();
-        String[] projection = {
-                "_id",
-                EquationContract.NUMMBER,
-                EquationContract.EQUATION,
-                EquationContract.DATE
-        };
-        Cursor cursor = db.rawQuery("SELECT * FROM "+ EquationContract.TABLE_NAME,projection);
-        ArrayList<String> equations = new ArrayList<>();
-        while (cursor.moveToNext()){
-            equations.add(cursor.getString(2));
-        }
-        cursor.close();
-        db.close();
-        return  equations;
-    }
-
     @Override
     protected void onDestroy() {
         super.onDestroy();

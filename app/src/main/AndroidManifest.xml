@@ -31,7 +31,7 @@
         </receiver>
 
         <provider
-            android:authorities="com.test.peterphchen.junittest.EquationsProvider"
+            android:authorities="com.test.peterphchen.junittest"
             android:name=".EquationsProvider"
             android:exported="false"
             />
