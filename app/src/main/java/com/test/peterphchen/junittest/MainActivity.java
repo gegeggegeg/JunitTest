@@ -10,7 +10,9 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.icu.text.SimpleDateFormat;
 import android.os.SystemClock;
 import android.support.annotation.NonNull;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -206,8 +208,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 db.execSQL("DROP TABLE IF EXISTS " + EquationContract.TABLE_NAME);
                 dbhelper.onCreate(db);
                 Toast.makeText(this, "Table deleted", Toast.LENGTH_SHORT).show();
+                return true;
+            case R.id.snackbar:
+                Snackbar.make(findViewById(android.R.id.content), "Snackbar test",Snackbar.LENGTH_LONG).setAction("action", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Toast.makeText(MainActivity.this, "Action activated", Toast.LENGTH_SHORT).show();
+                    }
+                }).show();
+                return  true;
         }
-        return super.onOptionsItemSelected(item);
+        return true;
     }
 
     public Object doCalculation(String input ) {

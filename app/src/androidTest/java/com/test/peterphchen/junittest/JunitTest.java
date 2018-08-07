@@ -1,9 +1,12 @@
 package com.test.peterphchen.junittest;
 
 import android.app.Activity;
+import android.support.test.InstrumentationRegistry;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -31,9 +34,22 @@ public class JunitTest {
 
     @Rule public final ActivityTestRule<MainActivity> main = new ActivityTestRule<>(MainActivity.class,true);
 
+    private static View background;
+    private static EditText editText;
+
     @BeforeClass
     public static void initTest(){
         Log.d(TAG, "initTest: Test initialized");
+        InstrumentationRegistry.getInstrumentation().runOnMainSync(new Runnable() {
+            @Override
+            public void run() {
+                LayoutInflater inflater = LayoutInflater.from(InstrumentationRegistry.getTargetContext());
+                background = inflater.inflate(R.layout.activity_main,null);
+                background.measure(800,400);
+                background.layout(0,0,800,400);
+                editText = background.findViewById(R.id.outputText);
+            }
+        });
     }
 
     @Before
@@ -46,6 +62,7 @@ public class JunitTest {
         buttonFour = main.getActivity().findViewById(R.id.button4);
         buttonFive = main.getActivity().findViewById(R.id.button5);
         buttonSix = main.getActivity().findViewById(R.id.button6);
+
     }
 
     @Test
@@ -58,6 +75,11 @@ public class JunitTest {
         Assert.assertNotNull("This object is null",buttonFour);
         Assert.assertNotNull("This object is null",buttonFive);
         Assert.assertNotNull("This object is null",buttonSix);
+    }
+
+    @Test
+    public void ContextTest(){
+        Assert.assertEquals("Error, not equal","",editText.getText());
     }
 
     @After
