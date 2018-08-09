@@ -1,5 +1,10 @@
 package com.test.peterphchen.junittest;
 
+import android.app.AlarmManager;
+import android.app.job.JobInfo;
+import android.app.job.JobScheduler;
+import android.app.job.JobService;
+import android.content.ComponentName;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -52,6 +57,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private static Integer number = 1;
     private DrawerLayout mDrawerLayout;
     private FirebaseJobDispatcher dispatcher;
+    private static JobScheduler scheduler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,18 +87,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 return true;
             }
         });
-        final Job testJob = JobScheduling();
+        JobschedulerService jobservice = new JobschedulerService();
+        scheduler = (JobScheduler) getSystemService(Context.JOB_SCHEDULER_SERVICE);
+        final JobInfo info = Jobsetup(jobservice);
+        //final Job testJob = JobScheduling();
         Switch jobSwitch = findViewById(R.id.jobSwitch);
-        final SharedPreferences setting = getPreferences(0);
+        final SharedPreferences setting = getSharedPreferences("setting",MODE_PRIVATE);
         jobSwitch.setChecked(setting.getBoolean("switch",false));
         jobSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if(b){
-                    dispatcher.mustSchedule(testJob);
+                    scheduler.schedule(info);
+                    //dispatcher.mustSchedule(testJob);
                     Toast.makeText(MainActivity.this, "Scheduled job enabled", Toast.LENGTH_SHORT).show();
                 }else{
-                    dispatcher.cancel("test-job");
+                    scheduler.cancelAll();
+                    //dispatcher.cancel("test-job");
                     Toast.makeText(MainActivity.this, "Scheduled job disabled", Toast.LENGTH_SHORT).show();
                 }
                 SharedPreferences.Editor editor =setting.edit();
@@ -252,6 +263,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 .setConstraints(Constraint.DEVICE_CHARGING)
                 .build();
         return myJob;
+    }
+
+    private JobInfo Jobsetup(JobService service){
+        ComponentName jobservice = new ComponentName(this, service.getClass());
+        JobInfo jobInfo = new JobInfo.Builder(123,jobservice).
+                setMinimumLatency(0).
+                setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY).
+                setPeriodic(AlarmManager.INTERVAL_FIFTEEN_MINUTES).
+                setRequiresCharging(true).
+                setRequiresDeviceIdle(false).
+                setBackoffCriteria(3000,JobInfo.BACKOFF_POLICY_LINEAR).
+                build();
+        return jobInfo;
     }
 
     @Override
